@@ -19,6 +19,25 @@
             </ResourceDictionary.MergedDictionaries>
             
             <UI:CountToVisibilityConverter x:Key="countToVisibilityConverter"/>
+
+            <Style TargetType="{x:Type HeaderedContentControl}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type HeaderedContentControl}">
+                            <DockPanel>
+                                <ContentPresenter DockPanel.Dock="Top" ContentSource="Header" />
+                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </DockPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <Style TargetType="TextBlock" x:Key="headerStyle">
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="Foreground" Value="#CC119EDA"/>
+            </Style>
+
         </ResourceDictionary>
     </Window.Resources>
     
@@ -51,7 +70,8 @@
 
         </Grid>
 
-        <Grid Visibility="{Binding DependencyObjects.Count, Converter={StaticResource countToVisibilityConverter}}">
+        <Grid Visibility="{Binding DependencyObjects.Count, Converter={StaticResource countToVisibilityConverter}}"
+              Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -64,20 +84,25 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <DataGrid Grid.Column="0"
-                  Grid.Row="0"
-                  Grid.RowSpan="3"
-                  Name="masterGrid"
-                  ItemsSource="{Binding DependencyObjects}" 
-                  AutoGenerateColumns="False"
-                  SelectionMode="Single">
+            <HeaderedContentControl Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
+                <HeaderedContentControl.Header>
+                    <TextBlock Text="Dependency Objects" Style="{StaticResource headerStyle}"/>
+                </HeaderedContentControl.Header>
+                <HeaderedContentControl.Content>
+                    <DataGrid 
+                            Name="masterGrid"
+                            ItemsSource="{Binding DependencyObjects}" 
+                            AutoGenerateColumns="False"
+                            SelectionMode="Single">
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Address" Binding="{Binding Address, StringFormat=X}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
-                </DataGrid.Columns>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Address" Binding="{Binding Address, StringFormat=X}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" Width="*"/>
+                        </DataGrid.Columns>
 
-            </DataGrid>
+                    </DataGrid>
+                </HeaderedContentControl.Content>
+            </HeaderedContentControl>
 
             <GridSplitter ResizeDirection="Columns"
                       Grid.Row="0"
@@ -86,10 +111,7 @@
                       Width="3"
                       Height="Auto"
                       HorizontalAlignment="Center"
-                      VerticalAlignment="Stretch"
-                      >
-
-            </GridSplitter>
+                      VerticalAlignment="Stretch" />
 
             <GridSplitter ResizeDirection="Rows"
                       Grid.Row="1"
@@ -97,35 +119,44 @@
                       Height="3"
                       Width="Auto"
                       HorizontalAlignment="Stretch"
-                      VerticalAlignment="Center"
-                      >
+                      VerticalAlignment="Center" />
+            
+            <HeaderedContentControl Grid.Column="2" Grid.Row="0">
+                <HeaderedContentControl.Header>
+                    <TextBlock Text="Dependency Properties" Style="{StaticResource headerStyle}"/>
+                </HeaderedContentControl.Header>
+                <HeaderedContentControl.Content>
+                    <DataGrid ItemsSource="{Binding ElementName=masterGrid, Path=SelectedItem.DependencyProperties}" 
+                                  AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Address" Binding="{Binding Address, StringFormat=X}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Property Id" Binding="{Binding PropertyId}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Default Value" Binding="{Binding DefaultValue}" IsReadOnly="True" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </HeaderedContentControl.Content>
+            </HeaderedContentControl>
 
-            </GridSplitter>
+            <HeaderedContentControl Grid.Column="2" Grid.Row="2">
+                <HeaderedContentControl.Header>
+                    <TextBlock Text="Effective Values" Style="{StaticResource headerStyle}"/>
+                </HeaderedContentControl.Header>
+                <HeaderedContentControl.Content>
+                    <DataGrid ItemsSource="{Binding ElementName=masterGrid, Path=SelectedItem.EffectiveValues}" 
+                                  AutoGenerateColumns="False"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Address" Binding="{Binding Address, StringFormat=X}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Property Id" Binding="{Binding PropertyId}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </HeaderedContentControl.Content>
+            </HeaderedContentControl>
 
-            <DataGrid Grid.Column="2"
-                  Grid.Row="0"
-                  ItemsSource="{Binding ElementName=masterGrid, Path=SelectedItem.DependencyProperties}" 
-                  AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Address" Binding="{Binding Address, StringFormat=X}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Property Id" Binding="{Binding PropertyId}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Default Value" Binding="{Binding DefaultValue}" IsReadOnly="True"/>
-                </DataGrid.Columns>
-            </DataGrid>
-
-            <DataGrid Grid.Column="2"
-                  Grid.Row="2"
-                  ItemsSource="{Binding ElementName=masterGrid, Path=SelectedItem.EffectiveValues}" 
-                  AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Address" Binding="{Binding Address, StringFormat=X}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Property Id" Binding="{Binding PropertyId}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
-                </DataGrid.Columns>
-            </DataGrid>
         </Grid>
         
     </Grid>
