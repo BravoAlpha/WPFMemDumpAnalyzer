@@ -16,7 +16,7 @@ namespace WPFMemDumpAnalyzer.Core
             get { return m_dependencyProperties; }
         }
 
-        public IEnumerable<EffectiveValueEntryMetadata>  EffectiveValues
+        public IEnumerable<EffectiveValueEntryMetadata> EffectiveValues
         {
             get { return m_effectiveValues; }
         }

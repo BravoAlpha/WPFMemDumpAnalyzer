@@ -59,66 +59,6 @@ namespace WPFMemDumpAnalyzer.Core
             return IsDependencyObject(baseType);
         }
 
-        //public IEnumerable<DependencyPropertyMetadata> GetRegisteredDependencyProperties()
-        //{
-        //    const string registeredDependencyPropertiesFieldName = "RegisteredPropertyList";
-        //    IList<DependencyPropertyMetadata> registeredDependencyProperties = new List<DependencyPropertyMetadata>();
-
-        //    ClrType dependencyObjectType = m_heap.EnumerateObjects()
-        //                                         .Select(m_heap.GetObjectType)
-        //                                         .Where(IsDependencyProperty)
-        //                                         .FirstOrDefault();
-
-        //    if (dependencyObjectType == null)
-        //        return registeredDependencyProperties;
-
-        //    // Get the RegisteredDependencyProperties field, its type, and address
-        //    ClrStaticField registeredDependencyPropertiesField = dependencyObjectType.GetStaticFieldByName(registeredDependencyPropertiesFieldName);
-        //    if (registeredDependencyPropertiesField == null)
-        //        return registeredDependencyProperties;
-
-        //    ClrType registeredDependencyPropertiesFieldType = registeredDependencyPropertiesField.Type;
-        //    ulong registeredDependencyPropertiesFieldAddress = registeredDependencyPropertiesField.GetFieldAddress(m_runtime.AppDomains[0]);
-
-        //    // Get the List field
-        //    ClrInstanceField internalListField = registeredDependencyPropertiesFieldType.Fields[0];
-        //    var internalListFieldAddress = (ulong)internalListField.GetFieldValue(registeredDependencyPropertiesFieldAddress, true);
-        //    ClrType internalListType = m_heap.GetObjectType(internalListFieldAddress);
-
-        //    // Get the Array field
-        //    ClrInstanceField internalArrayField = internalListType.Fields[0];
-        //    var internalArrayFieldAddress = (ulong)internalArrayField.GetFieldValue(internalListFieldAddress);
-        //    ClrType internalArrayType = m_heap.GetObjectType(internalArrayFieldAddress);
-
-        //    int numberOfElements = internalArrayType.GetArrayLength(internalArrayFieldAddress);
-        //    for (int elementIndex = 0; elementIndex < numberOfElements; ++elementIndex)
-        //    {
-        //        object propertyAddress = internalArrayType.GetArrayElementValue(internalArrayFieldAddress, elementIndex);
-        //        if (propertyAddress == null)
-        //            continue;
-
-        //        var castedPropertyAddress = (ulong)propertyAddress;
-        //        ClrType propertyType = m_heap.GetObjectType(castedPropertyAddress);
-        //        if (propertyType == null)
-        //            continue;
-
-        //        var dependencyPropertyMetadata = new DependencyPropertyMetadata(propertyType, castedPropertyAddress);
-        //        registeredDependencyProperties.Add(dependencyPropertyMetadata);
-        //    }
-
-        //    return registeredDependencyProperties;
-        //}
-
-        private bool IsDependencyProperty(ClrType clrType)
-        {
-            const string dependencyPropertyName = "System.Windows.DependencyProperty";
-
-            if (clrType == null)
-                return false;
-
-            return clrType.Name == dependencyPropertyName;
-        }
-
         public void Dispose()
         {
             m_dataTarget.Dispose();

@@ -1,7 +1,9 @@
 ﻿<Controls:MetroWindow x:Class="WPFMemDumpAnalyzer.UI.MainWindow"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                      xmlns:UI="clr-namespace:WPFMemDumpAnalyzer.UI" 
                       Title="WPF Memory Dump Analyzer" 
                       Height="350" 
                       Width="525">
@@ -15,12 +17,41 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <UI:CountToVisibilityConverter x:Key="countToVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     
     <Grid>
-        
-        <Grid>
+
+        <Grid Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                FontSize="40"
+                Foreground="Gray"
+                Text="Drag a Memory Dump Here..." />
+
+            <Image Grid.Row="1"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Width="128"
+                   Height="128"
+                   Source="Assets/drop_target.png" />
+
+            <i:Interaction.Behaviors>
+                <UI:FileDropBehavior DroppedFile="{Binding DumpFile, Mode=TwoWay}" FileExtension=".dmp"/>
+            </i:Interaction.Behaviors>
+
+        </Grid>
+
+        <Grid Visibility="{Binding DependencyObjects.Count, Converter={StaticResource countToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -97,27 +128,5 @@
             </DataGrid>
         </Grid>
         
-        <Grid Background="White" Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            
-            <TextBlock
-                Grid.Row="0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                FontSize="40"
-                Foreground="Gray"
-                Text="Drag a Memory Dump Here..."/>
-            
-            <Image Grid.Row="1"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Width="128"
-                   Height="128"
-                   Source="Assets/drop_target.png"/>
-            
-        </Grid>
     </Grid>
 </Controls:MetroWindow>
