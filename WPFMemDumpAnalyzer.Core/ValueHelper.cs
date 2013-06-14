@@ -18,7 +18,8 @@ namespace WPFMemDumpAnalyzer.Core
                 return new MemoryAddress(address);
             }
 
-            return "Cannot Determine";
+            // TODO: Handle structs
+            return "<Struct>";
         }
 
         private static string ReadString(ClrType stringType, ulong stringAddress)

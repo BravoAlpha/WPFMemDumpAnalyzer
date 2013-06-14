@@ -47,9 +47,12 @@ namespace WPFMemDumpAnalyzer.Core
         {
             get
             {
+                // TODO: This is not a good approach because it will only get types for non-null values.
+                // A better approach will be to get the type directly from the _propertyType member.
+                // In order to do so, I need to understand how to read the type's name from System.RuntimeType internal cache.
                 var valueAddress = (ulong)ClrType.GetFieldValue(Address, new List<string> { "_defaultMetadata", "_defaultValue" });
                 if (valueAddress == 0)
-                    return "<No Type>";
+                    return "<Cannot Determine Type>";
 
                 ClrType valueType = ClrType.Heap.GetObjectType(valueAddress);
                 return valueType.Name;
